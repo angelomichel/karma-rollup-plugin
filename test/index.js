@@ -94,8 +94,7 @@ describe('karma-rollup-plugin', () => {
     it('should transpile es2015 syntax', () => runFixture('es2015.js'));
 
     it('should fail when a syntax error is found', () => runFixture('error-syntax-error.js').catch(error => {
-        expect(error.message).to.contain('Error transforming');
-        expect(error.message).to.contain('error-syntax-error.js');
+        expect(error.message).to.contain('Unexpected token');
     }));
 
     it('should fail when an import is not found', () => runFixture('error-import-not-found.js').catch(error => {
@@ -104,7 +103,7 @@ describe('karma-rollup-plugin', () => {
     }));
 
     it('should add inline source map', () => runFixture('es2015.js', {
-        sourceMap: 'inline'
+        sourcemap: 'inline'
     }).then(({ code }) => {
         expect(code).to.contain('//# sourceMappingURL');
     }));
@@ -113,8 +112,8 @@ describe('karma-rollup-plugin', () => {
         expect(file.sourceMap).not.to.be.ok;
     }));
 
-    it('should add map property in file with sourceMap = true', () => runFixture('es2015.js', {
-        sourceMap: true
+    it('should add map property in file with sourcemap = true', () => runFixture('es2015.js', {
+        sourcemap: true
     }).then(({ file }) => {
         expect(file.sourceMap).to.be.ok;
     }));

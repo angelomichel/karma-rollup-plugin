@@ -1,7 +1,7 @@
 import buble from 'rollup-plugin-buble'
 
 export default {
-    entry: 'src/index.js',
+    input: 'src/index.js',
     plugins: [
         buble()
     ],

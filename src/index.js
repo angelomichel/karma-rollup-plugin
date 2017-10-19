@@ -10,20 +10,24 @@ function createRollupPreprocessor (args, options = {}, logger) {
         log.debug('Processing "%s".', file.originalPath);
 
         try {
-            options.entry = file.originalPath;
+            options.input = file.originalPath;
+            options.format = options.format || 'es';
 
             rollup(options).then(bundle => {
-                let { code, map } = bundle.generate(options);
+                bundle.generate(options)
+                    .then((result, err) => {
+                        let { code, map } = result;
 
-                if (options.sourceMap === 'inline') {
-                    code += '\n//# ' + SOURCEMAPPING_URL + '=' + map.toUrl();
-                }
+                        if (options.sourcemap === 'inline') {
+                            code += '\n//# ' + SOURCEMAPPING_URL + '=' + map.toUrl();
+                        }
 
-                if (options.sourceMap) {
-                    file.sourceMap = map;
-                }
+                        if (options.sourcemap) {
+                            file.sourceMap = map;
+                        }
 
-                done(null, code);
+                        done(null, code);
+                    });
             }).catch(error => {
                 log.error('%s\n at %s\n%s', error.message, file.originalPath, error.stack);
                 done(error);
